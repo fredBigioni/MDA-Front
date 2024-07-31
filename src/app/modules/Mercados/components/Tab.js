@@ -16,6 +16,7 @@ import ProductPresentationTabContainer from './ProductPresentationTabContainer'
 import CustomMarketTabContainer from './CustomMarketTabContainer'
 import ErrorAlert from '../../ErrorsExamples/ErrorAlert'
 import SuccessAlert from '../../Success/SuccessAlert';
+import zIndex from '@material-ui/core/styles/zIndex';
 
 function TabContainer({ children, dir }) {
   return (

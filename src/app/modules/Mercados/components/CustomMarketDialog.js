@@ -19,7 +19,7 @@ import SelectVirtualize from '../../../components/SelectVirtualize'
 import Tooltip from '@material-ui/core/Tooltip';
 
 
-const CustomMarketDialog = (props) => {
+const CustomMarketDialog = (props) => {    
   const {customMarket, lineSelected, isActionClone, allCustomMarket, lines, open, handleClose} = props;
   const [loading, setLoading] = useState(false);    
   const emptyInitialValues = {

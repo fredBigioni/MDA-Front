@@ -3,6 +3,7 @@ import axios from 'axios';
 import CustomMarketSync from '../utils'
 import { actionTypes } from './mercadosRedux'
 import { FormattedMessage } from "react-intl";
+import swal from 'sweetalert';
 
 export const getCustomMarketTree = () => {
   return async function (dispatch) {
@@ -29,7 +30,7 @@ export const getLastAuditoryMarket = () => {
 export const signMarket = (data) => {
   return async function (dispatch) {
     try {
-      
+
       dispatch({ type: actionTypes.SET_CUSTOM_MARKET_SIGNATURE, isLoading: true, signedMessage: null });
       const resp = await axios.post('customMarkets/SignMarket', data, { headers: { 'Content-Type': 'application/json' } });
       const response = resp.data;
@@ -49,6 +50,40 @@ export const signMarket = (data) => {
     }
   }
 }
+
+export const signAll = (lineCode, userId, customMarketCount) => {
+  return async function (dispatch) {
+    try {
+     
+      await dispatch({ type: actionTypes.SET_CUSTOM_MARKET_SIGN_ALL, isLoading: true, customMarketCount: customMarketCount });      
+      const resp = await axios.post(`customMarkets/SignAllMarket/${lineCode}/${userId}`);
+
+      const response = resp.data;
+
+      if (response.status) {
+        await dispatch(getCustomMarketTree());
+
+        swal({
+          title: "Exito",
+          text: response.message,
+          icon: "success",
+          dangerMode: false,
+        });
+        await dispatch({ type: actionTypes.SET_CUSTOM_MARKET_SIGN_ALL, isLoading: false, signedMessage: null });
+        // await dispatch({ type: actionTypes.SET_GET_SUCCESS, visible: true, title: 'Exito!', description: response.message });
+
+      }
+      else {
+        dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: response.message });
+      }
+    }
+    catch (error) {
+      console.error("Error in SignMarket request:", error);
+      dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: error.message });
+    }
+  }
+}
+
 
 export const getCustomMarkets = () => {
   return async function (dispatch) {

@@ -29,6 +29,8 @@ export const actionTypes = {
     SET_GET_ERROR: 'SET_GET_ERROR',
     SET_GET_SUCCESS: 'SET_GET_SUCCESS',
     SET_CUSTOM_MARKET_SIGNATURE: 'SET_CUSTOM_MARKET_SIGNATURE',
+    SET_CUSTOM_MARKET_SIGN_ALL: 'SET_CUSTOM_MARKET_SIGN_ALL',
+    SET_CUSTOM_MARKET_SIGN_ALL_COUNT: 'SET_CUSTOM_MARKET_SIGN_ALL_COUNT',
     RESET_CUSTOM_MARKET: 'RESET_CUSTOM_MARKET',
     CUSTOM_MARKET_PREVIEW_ACTION: 'CUSTOM_MARKET_PREVIEW_ACTION',
     STORE_CUSTOM_MARKET_SELECTED: 'STORE_CUSTOM_MARKET_SELECTED',
@@ -64,12 +66,20 @@ const initialState = {
     getSuccess: { visible: false, title: null, description: null },
     lastAuditory: null,
     signedMessage: null,
+    isLoading: false,
+    customMarketCount: 0,
 };
 
 export const reducer = persistReducer(
     { storage, key: "mda-components", whitelist: ["user", "authToken"] },
     (state = initialState, action) => {
         switch (action.type) {
+
+            case actionTypes.SET_CUSTOM_MARKET_SIGN_ALL:
+                return { ...state, isLoading: action.isLoading,  customMaketCount: action.customMarketCount  }
+
+            case actionTypes.SET_CUSTOM_MARKET_SIGN_ALL_COUNT:
+                return { ...state, customMaketCount: action.customMarketCount }
 
             case actionTypes.SET_CUSTOM_MARKET_SIGNATURE:
                 return { ...state, signedMessage: action.signedMessage }

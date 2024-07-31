@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import * as actions from '../_redux/mercadosActions';
 import { FormattedMessage } from "react-intl";
@@ -21,9 +21,11 @@ import CustomMarketDialog from './CustomMarketDialog'
 import Can from './../../../config/Can';
 import { useStyles } from '../../../Style/GeneralStyles';
 import TrafficLightIcon from '../../../components/Tree/components/Semaforo/TrafficLightIcon';
+import { CustomLoader } from './CustomLoader';
 
 
 const CustomMarketTree = (props) => {
+
     const clases = useStyles()
     const { customMarket, customMarketTree } = props;
     const [loading, setLoading] = React.useState(true)
@@ -36,6 +38,10 @@ const CustomMarketTree = (props) => {
     const [openLineDialog, setOpenLineDialog] = React.useState(false);
     const [lineSelected, setLineSelected] = React.useState(null);
     const [openCustomMarketDialog, setOpenCustomMarketDialog] = React.useState(false);
+
+    const dispatch = useDispatch();
+    const { user } = useSelector(state => state.auth);
+    const { isLoading } = useSelector(state => state.mercados);
 
     const getItemObject = (item) => {
         let copyItem = JSON.parse(JSON.stringify(item))
@@ -72,6 +78,13 @@ const CustomMarketTree = (props) => {
         setOpenLineDialog(true);
     };
 
+    const handleSignAllMarkets = async (event, selectedItem) => {
+        const lineCode = selectedItem.code;
+        const userId = user.id;
+
+        await Promise.all([props.signAll(lineCode, userId, selectedItem.children.length)]);
+    }
+
     const handleOpenEditLineDialog = (event, selectedItem) => {
         let item = null
         if (selectedItem != undefined && selectedItem != null) {
@@ -88,6 +101,7 @@ const CustomMarketTree = (props) => {
     };
 
     const handleOpenCustomMarketDialog = (event, selectedItem) => {
+
         let item = null
         if (selectedItem != undefined && selectedItem != null) {
             item = getItemObject(selectedItem)
@@ -154,7 +168,7 @@ const CustomMarketTree = (props) => {
                     })
                     let lineKey = { key: child.lineCode, type: 'line', name: child.lineDescription.toUpperCase() }
                     let lineKeyEncoded = btoa(JSON.stringify(lineKey));
-                    childNodes.push({ key: lineKeyEncoded, type: 'line', name: child.lineDescription.toUpperCase(), children: marketNodes, active: true, isTest: child.lineCode == undefined })
+                    childNodes.push({ key: lineKeyEncoded, type: 'line', code: child.lineCode, name: child.lineDescription.toUpperCase(), children: marketNodes, active: true, isTest: child.lineCode == undefined })
                 })
 
                 if (parent.lineGroupCode == undefined) {
@@ -203,6 +217,7 @@ const CustomMarketTree = (props) => {
             event: e
         })
     }
+
 
     const showIconTree = (active, type, onClick) => {
         if (type == 'linegroup') {
@@ -289,6 +304,11 @@ const CustomMarketTree = (props) => {
                                                         >
                                                             <FormattedMessage id="CUSTOM_MARKET_TREE.ACTION.CUSTOM_MARKET.CREATE" />
                                                         </Item>
+                                                        <Item
+                                                            onClick={(event) => handleSignAllMarkets(event, subprops.node)}
+                                                        >
+                                                            <FormattedMessage id="CUSTOM_MARKET_TREE.ACTION.CUSTOM_MARKET.SIGN_ALL" />
+                                                        </Item>
                                                     </>
                                                 }
                                                 {subprops.node.type == 'linegroup' &&
@@ -337,6 +357,8 @@ const CustomMarketTree = (props) => {
 
     return (
         <div>
+            {isLoading && <CustomLoader />}
+
             {loading &&
                 <Loader />
             }
