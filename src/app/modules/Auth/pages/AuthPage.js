@@ -6,8 +6,9 @@ import { toAbsoluteUrl } from "../../../../_metronic/_helpers";
 import { ContentRoute } from "../../../../_metronic/layout";
 import Login from "./Login";
 import "../../../../_metronic/_assets/sass/pages/login/classic/login-1.scss";
+import { CircularProgress } from "@material-ui/core";
 
-export function AuthPage() {
+export function AuthPage(isAuthorized) {
   const today = new Date().getFullYear();
   return (
     <>
@@ -71,11 +72,12 @@ export function AuthPage() {
           <div className="flex-row-fluid d-flex flex-column position-relative p-7 overflow-hidden">
             {/* begin::Content body */}
             <div className="d-flex flex-column-fluid flex-center mt-30 mt-lg-0">
-              <Switch>
+              {/* <Switch>
                 <ContentRoute path="/auth/login" component={Login} />
                 <Redirect from="/auth" exact={true} to="/auth/login" />
                 <Redirect to="/auth/login" />
-              </Switch>
+              </Switch> */}
+              {isAuthorized ? <CircularProgress /> : "Su usuario no tiene acceso para cargar gastos en el sistema"}
             </div>
             {/*end::Content body*/}
 

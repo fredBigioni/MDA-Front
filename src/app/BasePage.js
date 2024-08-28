@@ -10,6 +10,7 @@ import ProductPresentationGroup from './modules/ProductPresentationGroup'
 import LaboratoryGroup from './modules/LaboratoryGroup'
 import DrugGroup from './modules/DrugGroup'
 import User from './modules/User'
+import Log from "./modules/Log";
 import Can from './config/Can';
 
 export default function BasePage() {
@@ -30,6 +31,8 @@ export default function BasePage() {
           <ContentRoute path="/maestros/grupo-laboratorios" component={LaboratoryGroup} />
           <ContentRoute path="/maestros/grupo-drogas" component={DrugGroup} />
           <ContentRoute path="/usuarios" component={User} />
+          <ContentRoute path="/logs" component={Log} />
+
         </Can>
         {/* <Can I="view" a="menu-usuarios">
           <ContentRoute path="/usuarios" component={User} />

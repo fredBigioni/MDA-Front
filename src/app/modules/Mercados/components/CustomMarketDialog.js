@@ -27,7 +27,7 @@ const CustomMarketDialog = (props) => {
     footer: '',
     header: '',
     lineCode: '',
-    order: '',
+    // order: '',
     marketFilter: 0,        
     drugReport: false,
     labReport: false,
@@ -37,7 +37,10 @@ const CustomMarketDialog = (props) => {
     testMarket: false,
     travelCrm: false,
     marketClass: 0,  
-    marketReference: 0    
+    marketReference: 0 ,
+    adUser: '',
+    responsibleName: '',
+    responsibleLastName: ''   
   }
   const [initialValues, setInitialValues] = useState(emptyInitialValues); 
 
@@ -48,7 +51,7 @@ const CustomMarketDialog = (props) => {
         footer: props.customMarket.data.footer,
         header: props.customMarket.data.header,
         lineCode: props.customMarket.data.lineCode,
-        order: props.customMarket.data.order,
+        // order: props.customMarket.data.order,
         marketFilter: props.customMarket.data.marketFilter,        
         drugReport: props.customMarket.data.drugReport,
         labReport: props.customMarket.data.labReport,
@@ -58,7 +61,10 @@ const CustomMarketDialog = (props) => {
         testMarket: props.customMarket.data.testMarket ,
         travelCrm: props.customMarket.data.travelCrm,
         marketClass: props.customMarket.data.marketClass,  
-        marketReference: props.customMarket.data.marketReference       
+        marketReference: props.customMarket.data.marketReference,
+        adUser: props.customMarket.data.adUser,
+        responsibleName: props.customMarket.data.responsibleName,
+        responsibleLastName: props.customMarket.data.responsibleLastName       
       })
     } else if (props.lineSelected != null) {
         let lineObj = getLine(props.lineSelected)
@@ -67,7 +73,7 @@ const CustomMarketDialog = (props) => {
             footer: '',
             header: '',
             lineCode: lineObj.code,
-            order: '',
+            // order: '',
             marketFilter: 0,        
             drugReport: false,
             labReport: false,
@@ -77,7 +83,10 @@ const CustomMarketDialog = (props) => {
             testMarket: lineObj.code == null,
             travelCrm: false,
             marketClass: 0,  
-            marketReference: 0
+            marketReference: 0,
+            adUser: '',
+            responsibleName: '',
+            responsibleLastName: '' 
         })        
     } else {
         setInitialValues(emptyInitialValues)
@@ -165,7 +174,8 @@ const CustomMarketDialog = (props) => {
   );
 
 
-  const prepareSave = ({description, footer, header, lineCode, order, marketFilter, drugReport, labReport, controlPanel, productReport, tcReport, testMarket, travelCrm, marketClass, marketReference}) => {
+  const prepareSave = ({description, footer, header, lineCode, adUser, responsibleName,
+    responsibleLastName, order, marketFilter, drugReport, labReport, controlPanel, productReport, tcReport, testMarket, travelCrm, marketClass, marketReference}) => {
     let copyCustomMarket = {}                    
     if (customMarket && customMarket.data) {
         copyCustomMarket = JSON.parse(JSON.stringify(customMarket.data))
@@ -180,12 +190,21 @@ const CustomMarketDialog = (props) => {
     if (header !== null) {
         copyCustomMarket.header = header
     }
+    if (adUser !== null) {
+        copyCustomMarket.adUser = adUser
+    }
+    if (responsibleName !== null) {
+        copyCustomMarket.responsibleName = responsibleName
+    }
+    if (responsibleLastName !== null) {
+        copyCustomMarket.responsibleLastName = responsibleLastName
+    }
     if (lineCode !== null) {
         copyCustomMarket.lineCode = parseInt(lineCode)
     }
-    if (order !== null) {
-        copyCustomMarket.order = parseInt(order)
-    } 
+    // if (order !== null) {
+    //     copyCustomMarket.order = parseInt(order)
+    // } 
     if (marketFilter !== null) {
         copyCustomMarket.marketFilter = parseInt(marketFilter)
     }
@@ -260,7 +279,7 @@ const CustomMarketDialog = (props) => {
     >
     <DialogContent>
       <DialogContentText> 
-          {(customMarket && customMarket.data) ? ((isActionClone == true) ? <FormattedMessage id="CUSTOM_MARKET_DIALOG.TITLE.CLONE_CUSTOM_MARKET" /> : customMarket.data.fullDescription) : <FormattedMessage id="CUSTOM_MARKET_DIALOG.TITLE.CREATE_CUSTOM_MARKET" />}
+          {(customMarket && customMarket.data) ? ((isActionClone == true) ? <FormattedMessage id="CUSTOM_MARKET_DIALOG.TITLE.CLONE_CUSTOM_MARKET" /> : customMarket?.data?.fullDescription) : <FormattedMessage id="CUSTOM_MARKET_DIALOG.TITLE.CREATE_CUSTOM_MARKET" />}
         </DialogContentText>
         <form onSubmit={formik.handleSubmit}>
             <Tooltip 
@@ -305,6 +324,66 @@ const CustomMarketDialog = (props) => {
                 />
             </Tooltip>
             <Tooltip 
+                title={<FormattedMessage id="CUSTOM_MARKET_DIALOG.TOOLTIP.ADUSER" />}
+                placement="left" 
+                arrow
+                enterDelay={700}
+                enterNextDelay={700}
+                >
+                <TextField
+                    className={`mb-4`}
+                    fullWidth
+                    id="adUser"
+                    name="adUser"
+                    label={<FormattedMessage id="CUSTOM_MARKET_DIALOG.ADUSER" />}
+                    value={formik.values.adUser}
+                    autoComplete="off"
+                    onChange={formik.handleChange}
+                    error={formik.touched.adUser && Boolean(formik.errors.adUser)}
+                    helperText={formik.touched.adUser && formik.errors.adUser}
+                />
+            </Tooltip>
+            <Tooltip 
+                title={<FormattedMessage id="CUSTOM_MARKET_DIALOG.TOOLTIP.RESPONSIBLENAME" />}
+                placement="left" 
+                arrow
+                enterDelay={700}
+                enterNextDelay={700}
+                >
+                <TextField
+                    className={`mb-4`}
+                    fullWidth
+                    id="responsibleName"
+                    name="responsibleName"
+                    label={<FormattedMessage id="CUSTOM_MARKET_DIALOG.RESPONSIBLENAME" />}
+                    value={formik.values.responsibleName}
+                    autoComplete="off"
+                    onChange={formik.handleChange}
+                    error={formik.touched.responsibleName && Boolean(formik.errors.responsibleName)}
+                    helperText={formik.touched.responsibleName && formik.errors.responsibleName}
+                />
+            </Tooltip>
+            <Tooltip 
+                title={<FormattedMessage id="CUSTOM_MARKET_DIALOG.TOOLTIP.RESPONSIBLELASTNAME" />}
+                placement="left" 
+                arrow
+                enterDelay={700}
+                enterNextDelay={700}
+                >
+                <TextField
+                    className={`mb-4`}
+                    fullWidth
+                    id="responsibleLastName"
+                    name="responsibleLastName"
+                    label={<FormattedMessage id="CUSTOM_MARKET_DIALOG.RESPONSIBLELASTNAME" />}
+                    value={formik.values.responsibleLastName}
+                    autoComplete="off"
+                    onChange={formik.handleChange}
+                    error={formik.touched.responsibleLastName && Boolean(formik.errors.responsibleLastName)}
+                    helperText={formik.touched.responsibleLastName && formik.errors.responsibleLastName}
+                />
+            </Tooltip>
+            <Tooltip 
                 title={<FormattedMessage id="CUSTOM_MARKET_DIALOG.TOOLTIP.FOOTER" />}
                 placement="left" 
                 arrow
@@ -341,7 +420,7 @@ const CustomMarketDialog = (props) => {
                     }
                 </FormControl>
             </Tooltip>
-            <Tooltip 
+            {/* <Tooltip 
                 title={<FormattedMessage id="CUSTOM_MARKET_DIALOG.TOOLTIP.ORDER" />}
                 placement="left" 
                 arrow
@@ -361,7 +440,7 @@ const CustomMarketDialog = (props) => {
                     error={formik.touched.order && Boolean(formik.errors.order)}
                     helperText={formik.touched.order && formik.errors.order}
                 />
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip 
                 title={<FormattedMessage id="CUSTOM_MARKET_DIALOG.TOOLTIP.MARKET_FILTER" />}
                 placement="left" 
@@ -451,7 +530,7 @@ const CustomMarketDialog = (props) => {
                     />                        
                 </FormControl>                             
             </Tooltip>
-            <Tooltip 
+            {/* <Tooltip 
                 title={<FormattedMessage id="CUSTOM_MARKET_DIALOG.TOOLTIP.DRUG_REPORT" />}
                 placement="left" 
                 arrow
@@ -555,7 +634,7 @@ const CustomMarketDialog = (props) => {
                         <FormattedMessage id="CUSTOM_MARKET_DIALOG.TC_REPORT" />
                     </label>
                 </FormControl>   
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip 
                 title={<FormattedMessage id="CUSTOM_MARKET_DIALOG.TOOLTIP.TEST_MARKET" />}
                 placement="left" 

@@ -137,7 +137,7 @@ const CustomMarketDetailEditDialog = (props) => {
                 <FormattedMessage id="CUSTOM_MARKET_DETAIL_DIALOG.TITLE" />
             </strong>
             <p></p>
-            {customMarket.data.fullDescription}
+            {customMarket?.data?.fullDescription}
           </DialogContentText>
             {/*begin::Form*/}
             <form

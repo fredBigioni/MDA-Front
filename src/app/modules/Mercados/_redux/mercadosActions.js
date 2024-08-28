@@ -38,10 +38,34 @@ export const signMarket = (data) => {
       if (response.status) {
         dispatch({ type: actionTypes.SET_GET_SUCCESS, visible: true, title: 'Exito!', description: response.message });
 
+        if (response.message == "Session Expirada") {
+
+          dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: response.message });
+          swal({
+            title: "Error",
+            text: response.message,
+            icon: "warning",
+          }).then((e) => {
+            if(e){
+              document.location.href = '/logout'
+            }
+          })
+        }
+        swal({
+          title: "Exito",
+          text: response.message,
+          icon: "success",
+        })
+
         dispatch(getCustomMarketTree());
       }
       else {
         dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: response.message });
+        swal({
+          title: "Error",
+          text: response.message,
+          icon: "warning",
+        })
       }
     }
     catch (error) {
@@ -54,8 +78,8 @@ export const signMarket = (data) => {
 export const signAll = (lineCode, userId, customMarketCount) => {
   return async function (dispatch) {
     try {
-     
-      await dispatch({ type: actionTypes.SET_CUSTOM_MARKET_SIGN_ALL, isLoading: true, customMarketCount: customMarketCount });      
+
+      await dispatch({ type: actionTypes.SET_CUSTOM_MARKET_SIGN_ALL, isLoading: true, customMarketCount: customMarketCount });
       const resp = await axios.post(`customMarkets/SignAllMarket/${lineCode}/${userId}`);
 
       const response = resp.data;
@@ -683,6 +707,28 @@ export const getCustomMarketsPreview = (code) => {
   return async function (dispatch) {
     const customMarketPreview = await axios.get(`customMarkets/preview/${code}`)
     return customMarketPreview.data
+  }
+}
+export const getHistoricCustomMarketsPreview = (code) => {
+  return async function (dispatch) {
+    const customMarketPreview = await axios.get(`customMarkets/historicpreviews/${code}`)
+    debugger;
+    return customMarketPreview.data
+  }
+}
+export const getHistoricCustomMarketsPreviewToScreen = (code) => {
+  return async function (dispatch) {
+    const customMarketPreview = await axios.get(`customMarkets/historicpreviewstoscreen/${code}`)
+    debugger;
+    return customMarketPreview
+  }
+}
+export const getLastSignCustomMarketsPreviewToScreen = (code) => {
+  return async function (dispatch) {
+    debugger;
+    const customMarketPreview = await axios.get(`customMarkets/lastsignpreviewstoscreen/${code}`)
+    debugger;
+    return customMarketPreview
   }
 }
 export const dispatchProductLoading = (loading) => {

@@ -4,6 +4,9 @@ import { put, takeLatest } from "redux-saga/effects";
 
 export const actionTypes = {
     RECEIVE_DRUGS_DATA: "RECEIVE_DRUGS_DATA",
+    RECEIVE_PREVIEW_DATA: "RECEIVE_PREVIEW_DATA",
+    RECEIVE_PREVIEW_HISTORYDATA:"RECEIVE_PREVIEW_HISTORYDATA",
+    RECEIVE_PREVIEW_HISTORYDATATOSCREEN:"RECEIVE_PREVIEW_HISTORYDATATOSCREEN",
     RECEIVE_LABORATORIES_DATA: "RECEIVE_LABORATORIES_DATA",
     RECEIVE_LINEGROUPS_DATA: "RECEIVE_LINEGROUPS_DATA",
     RECEIVE_PHARMACEUTICALFORMS_DATA: 'RECEIVE_PHARMACEUTICALFORMS_DATA',
@@ -68,6 +71,9 @@ const initialState = {
     signedMessage: null,
     isLoading: false,
     customMarketCount: 0,
+    marketPreviewData:null,
+    marketHistoryArray:[],
+    marketHistoryArrayToScreen:[]
 };
 
 export const reducer = persistReducer(
@@ -86,6 +92,15 @@ export const reducer = persistReducer(
 
             case actionTypes.RECEIVE_PRODUCTS_DATA:
                 return { ...state, products: action.products }
+
+            case actionTypes.RECEIVE_PREVIEW_DATA:
+                return { ...state, marketPreviewData: action.data }   
+                
+            case actionTypes.RECEIVE_PREVIEW_HISTORYDATA:
+                return { ...state, marketHistoryArray: action.historyData }
+
+            case actionTypes.RECEIVE_PREVIEW_HISTORYDATATOSCREEN:
+                return { ...state, marketHistoryArrayToScreen: action.historyDataToScreen }     
 
             case actionTypes.RECEIVE_LAST_AUDITORY_VALUE:
                 return { ...state, lastAuditory: action.lastAuditory, isLoading: action.isLoading };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux'
+import { connect, shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import * as actions from './../_redux/mercadosActions';
 import Grid from '@material-ui/core/Grid';
@@ -10,21 +10,25 @@ import IconButton from '@material-ui/core/IconButton';
 import Can from './../../../config/Can';
 import { customMarketDetailDefault } from '../customMarketDetailDefault'
 import { useStyles } from '../../../Style/GeneralStyles';
+import { actionTypes } from '../_redux/mercadosRedux';
 
 
 const CustomMarketPreview = (props) => {
   const clases = useStyles()
-  const {customMarket, customMarketPageView, intl } = props;  
+  const dispatch = useDispatch();
+  const {customMarket, customMarketPageView, intl, marketPreviewData  } = props;  
   const [ isLoading, setLoading ] = React.useState(true)
-  const [ marketPreviewData, setMarketPreviewData ] = React.useState([])
+//   const [ marketPreviewData, setMarketPreviewData ] = React.useState([])
   const [ allowedPermission, setAllowedPermission ] = React.useState(false)
   const [ itemsToDelete, setItemsToDelete ] = React.useState([])
   const [ itemsToEdit, setItemsToEdit ] = React.useState([])
   const [ visibleButtonsToolbar,  setVisibleButtonsToolbar ] = React.useState(false)
+ 
   
 
   const onCancel = async() => {
     await getCustomMarketsPreview()
+    // await getHistoricCustomMarketsPreview()
     setItemsToDelete([])
     setItemsToEdit([])
     setVisibleButtonsToolbar(false)
@@ -35,22 +39,24 @@ const CustomMarketPreview = (props) => {
       if(customMarketPageView.view == 'preview') {
           setLoading(true)
           let preview = await props.getCustomMarketsPreview(customMarket.data.code)
+          debugger;
           preview = preview.map( item => {
             item.modifier = item.modifier.toString().replace('.', ',')
             item.intemodifier = item.intemodifier.toString().replace('.', ',')
             return item
           })
-          setMarketPreviewData(preview)
+          dispatch({type: actionTypes.RECEIVE_PREVIEW_DATA, data: preview })
           setLoading(false)
       }
   }
+
   const deleteCustomMarket = async(customMarketPreviewItem) => {
     customMarketPreviewItem.customMarketGroupCode = null; 
     customMarketPreviewItem.itemCondition = 'N'; 
     let itemIndex = marketPreviewData.findIndex(x => x.id === customMarketPreviewItem.id)
     marketPreviewData.splice(itemIndex, 1);
     setItemsToDelete([...itemsToDelete, customMarketPreviewItem])
-    setMarketPreviewData(marketPreviewData);
+    dispatch({type: actionTypes.RECEIVE_PREVIEW_DATA, data: marketPreviewData })
     props.actionCustomMarketPreviewReset()
     setVisibleButtonsToolbar(true)
 }
@@ -70,12 +76,13 @@ const updateCustomMarket = async(customMarketSelectedItem) => {
             marketPreviewData[index].productTypeCode    = customMarketSelectedItem.productTypeCode;
         }
     })
-    setMarketPreviewData([...oldMarketPreviewData, marketPreviewData]);
+    dispatch({type: actionTypes.RECEIVE_PREVIEW_DATA, marketPreviewData: [...oldMarketPreviewData, marketPreviewData] })
     setVisibleButtonsToolbar(true)
   }
 
   React.useEffect(() => {
     getCustomMarketsPreview()
+    // getHistoricCustomMarketsPreview()
   }, [customMarketPageView.view])
 
   const onSave = async() => {
@@ -150,6 +157,7 @@ const updateCustomMarket = async(customMarketSelectedItem) => {
     setItemsToEdit([])
     setItemsToDelete([])
     await getCustomMarketsPreview()
+    // await getHistoricCustomMarketsPreview()
       
     }
     const renderClass = (classCode) => {
@@ -265,7 +273,7 @@ const updateCustomMarket = async(customMarketSelectedItem) => {
                                 {title: intl.formatMessage({id: "CUSTOM_MARKET_PREVIEW.MODIFIER"}), field: 'modifier'},
                                 {title: intl.formatMessage({id: "CUSTOM_MARKET_PREVIEW.INTEMODIFIER"}), field: 'intemodifier',}
                             ]}
-                            data={marketPreviewData}
+                            data={marketPreviewData ? marketPreviewData : []}
                             options={{
                                 filtering: true,
                                 pageSize: 10,
@@ -329,7 +337,8 @@ const updateCustomMarket = async(customMarketSelectedItem) => {
 const mapStateToProps = (state) => {
     return {
         customMarket: state.mercados.customMarket,
-        customMarketPageView: state.mercados.customMarketPageView
+        customMarketPageView: state.mercados.customMarketPageView,
+        marketPreviewData:state.mercados.marketPreviewData
     }
 }
 function mapDispatchToProps(dispatch) {

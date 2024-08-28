@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { injectIntl } from "react-intl";
 import { bindActionCreators } from 'redux';
 import * as actions from './../_redux/mercadosActions';
@@ -10,12 +10,20 @@ import Tooltip from '@material-ui/core/Tooltip';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { CustomMarketActionFirma } from './CustomMarketActionFirma';
 import CustomMarketLastAuditory from './CustomMarketLastAuditory';
+import { actionTypes } from '../_redux/mercadosRedux';
 
 const CustomMarketToolbar = (props) => {
   const { intl, customMarket } = props;
+  const dispatch = useDispatch();
 
   if (customMarket.isLoading || Object.keys(customMarket.data).length == 0) {
     return null
+  }
+
+  const handleClearData = () => {
+
+    dispatch({ type: actionTypes.RECEIVE_PREVIEW_HISTORYDATA, historyData: [] })
+    
   }
 
   return (
@@ -39,7 +47,7 @@ const CustomMarketToolbar = (props) => {
             onClick={() => props.setMarketTreeVisible(true)}
           >
             <Tooltip title={intl.formatMessage({ id: "CUSTOM_MARKET_TREE.TITLE" })}>
-              <IconButton aria-label="" color="primary">
+              <IconButton onClick={handleClearData} aria-label="" color="primary">
                 <AccountTreeIcon />
               </IconButton>
             </Tooltip>

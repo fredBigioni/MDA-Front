@@ -10,6 +10,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import Can from "../../../../../app/config/Can";
 import { FormattedMessage } from "react-intl";
+import { WorkOutline } from "@material-ui/icons";
 
 export function AsideMenuList({ layoutProps }) {
   const location = useLocation();
@@ -181,6 +182,22 @@ export function AsideMenuList({ layoutProps }) {
                 </span>
                 <span className="menu-text">
                   <FormattedMessage id="MENU.USERS" />
+                </span>
+              </NavLink>
+            </li>            
+          </Can>
+          <Can I="view" a="menu-logs">
+            <li
+              className={`menu-item menu-item-submenu ${getMenuItemActive("/logs", true)}`}
+              aria-haspopup="true"
+              data-menu-toggle="hover"
+            >
+              <NavLink className="menu-link menu-toggle" to="/logs">
+                <span className="svg-icon menu-icon">
+                  <WorkOutline />
+                </span>
+                <span className="menu-text">
+                  <FormattedMessage id="MENU.LOG" />
                 </span>
               </NavLink>
             </li>            

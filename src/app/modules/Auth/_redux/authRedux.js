@@ -8,11 +8,14 @@ export const actionTypes = {
   UserRequested: "[Request User] Action",
   UserLoaded: "[Load User] Auth API",
   SetUser: "[Set User] Action",
+  AdLogin: "[AdLogin] Action",
+
 };
 
 const initialAuthState = {
   user: undefined,
   authToken: undefined,
+  adUser: undefined,
 };
 
 export const reducer = persistReducer(
@@ -40,6 +43,12 @@ export const reducer = persistReducer(
         return { ...state, user };
       }
 
+      case actionTypes.AdLogin: {
+        const { userName } = action.payload.adUser;
+
+        return { adUser: {userName} };
+      }
+
       default:
         return state;
     }
@@ -50,6 +59,7 @@ export const actions = {
   login: (user) => ({ type: actionTypes.Login, payload: { user } }),
   logout: () => ({ type: actionTypes.Logout }),
   setUser: (user) => ({ type: actionTypes.SetUser, payload: { user } }),
+  adLogin: (adUser) => ({type: actionTypes.AdLogin, payload: { adUser }})
 };
 
 

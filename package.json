@@ -98,7 +98,9 @@
         "sweetalert": "^2.1.2",
         "url-join": "^4.0.1",
         "velocity-react": "^1.4.3",
-        "yup": "0.29.0"
+        "yup": "0.29.0",
+        "@azure/msal-browser": "^2.14.2",
+        "@azure/msal-react": "^1.0.0"
     },
     "devDependencies": {
         "copyfiles": "2.1.1",

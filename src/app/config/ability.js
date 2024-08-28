@@ -29,6 +29,7 @@ function defineRulesFor(auth) {
     can('view', 'custom-market-tree-action');
     can('view', 'menu-maestros');
     can('view', 'menu-usuarios');
+    can('view', 'menu-logs');
   }
   if (auth && auth.isAdmin == false) {
     cannot('view', 'manage-custom-market');

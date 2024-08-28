@@ -6,7 +6,6 @@ import "react-app-polyfill/ie11";
 import "react-app-polyfill/stable";
 import React from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
 import * as _redux from "./redux";
 import store, { persistor } from "./redux/store";
 import App from "./app/App";
@@ -25,6 +24,9 @@ import {
   MetronicSubheaderProvider
 } from "./_metronic/layout";
 import {MetronicI18nProvider} from "./_metronic/i18n";
+import { MsalProvider } from "@azure/msal-react";
+import { msalConfig } from "./app/authConfig";
+import { PublicClientApplication } from "@azure/msal-browser";
 
 /**
  * Base URL of the website.
@@ -44,14 +46,18 @@ const { PUBLIC_URL } = process.env;
  *
  * @see https://github.com/axios/axios#interceptors
  */
-_redux.setupAxios(axios, store);
+
+const msalInstance = new PublicClientApplication(msalConfig);
+
 
 ReactDOM.render(
   <MetronicI18nProvider>
     <MetronicLayoutProvider>
       <MetronicSubheaderProvider>
         <MetronicSplashScreenProvider>
+        <MsalProvider instance={msalInstance}>
           <App store={store} persistor={persistor} basename={PUBLIC_URL} />
+        </MsalProvider>
         </MetronicSplashScreenProvider>
       </MetronicSubheaderProvider>
     </MetronicLayoutProvider>
