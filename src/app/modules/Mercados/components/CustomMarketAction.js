@@ -26,7 +26,7 @@ import { Grid } from 'react-virtualized';
 import { CircularProgress, Dialog, Drawer, Popover } from '@material-ui/core';
 
 function CustomMarketAction(props) {
-  const { customMarketPageView, customMarket, lineSelected, marketHistoryArray, marketHistoryArrayToScreen, intl } = props;
+  const { customMarketPageView, customMarket, lineSelected, marketHistoryArray, marketHistoryArrayToScreen,marketLastSignArray, intl } = props;
   const [isActionClone, setIsActionClone] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openCustomMarketDialog, setOpenCustomMarketDialog] = React.useState(false);
@@ -46,7 +46,7 @@ function CustomMarketAction(props) {
 
   useEffect(() => {
     getHistoricCustomMarketsPreview()
-    getHistoricCustomMarketsPreviewToScreen(customMarket?.data)
+    getLastSignCustomMarketsPreview()
   }, [customMarket, lineSelected, customMarketPageView, openCustomMarketDialog, anchorElDropdown])
 
 
@@ -54,6 +54,14 @@ function CustomMarketAction(props) {
     if (customMarketPageView.view == 'preview') {
       let preview = await props.getHistoricCustomMarketsPreview(customMarket.data.code)
       dispatch({ type: actionTypes.RECEIVE_PREVIEW_HISTORYDATA, historyData: preview?.result?.length > 0 ? preview?.result : [] })
+    }
+  }
+
+  const getLastSignCustomMarketsPreview = async () => {
+    if (customMarketPageView.view == 'preview') {
+      let preview = await props.getLastSignCustomMarketsPreview(customMarket.data.code)
+      debugger;
+      dispatch({ type: actionTypes.RECEIVE_PREVIEW_LASTSIGN, lastSignData: preview?.length > 0 ? preview : [] })
     }
   }
 
@@ -217,7 +225,7 @@ function CustomMarketAction(props) {
                 </span>
               </div>
             )}
-            {customMarketPageView.view == 'preview' && ( marketHistoryArrayToScreen && marketHistoryArrayToScreen?.length > 0) && (
+            {customMarketPageView.view == 'preview' && ( marketLastSignArray && marketLastSignArray?.length > 0) && (
               <div
                 id="btn_manage"
                 className={`btn btn-secondary font-weight-bold px-2 pr-6 py-0 mb-2 ml-2`}
@@ -413,7 +421,8 @@ const mapStateToProps = (state) => {
   return {
     customMarketPageView: state.mercados.customMarketPageView,
     marketHistoryArray: state.mercados.marketHistoryArray,
-    marketHistoryArrayToScreen: state.mercados.marketHistoryArrayToScreen
+    marketHistoryArrayToScreen: state.mercados.marketHistoryArrayToScreen,
+    marketLastSignArray:state.mercados.marketLastSignArray
 
 
   };

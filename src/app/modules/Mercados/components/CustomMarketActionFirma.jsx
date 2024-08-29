@@ -1,5 +1,5 @@
 import React from 'react'
-import { IconButton } from '@material-ui/core'
+import { CircularProgress, IconButton } from '@material-ui/core'
 import PreviewIcon from '@material-ui/icons/Visibility';
 import Signature from '@material-ui/icons/BorderColor';
 import { FormattedMessage } from 'react-intl';
@@ -11,7 +11,7 @@ export const CustomMarketActionFirma = () => {
 
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.auth);
-  const { customMarket } = useSelector(state => state.mercados);
+  const { customMarket, isLoading } = useSelector(state => state.mercados);
 
   const signCurrentMarket = async () => {
 
@@ -32,7 +32,7 @@ export const CustomMarketActionFirma = () => {
           onClick={() => signCurrentMarket()}
         >
           <IconButton aria-label="" color="primary">
-            <Signature color="primary" />
+            {isLoading ? <CircularProgress size={22} /> : <Signature color="primary" />}
           </IconButton>
           <span style={{ color: '#17c191' }}>
             <FormattedMessage id="CUSTOM_MARKET_ACTION.SIGNATURE" />

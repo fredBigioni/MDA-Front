@@ -6,6 +6,7 @@ export const actionTypes = {
     RECEIVE_DRUGS_DATA: "RECEIVE_DRUGS_DATA",
     RECEIVE_PREVIEW_DATA: "RECEIVE_PREVIEW_DATA",
     RECEIVE_PREVIEW_HISTORYDATA:"RECEIVE_PREVIEW_HISTORYDATA",
+    RECEIVE_PREVIEW_LASTSIGN:"RECEIVE_PREVIEW_LASTSIGN",
     RECEIVE_PREVIEW_HISTORYDATATOSCREEN:"RECEIVE_PREVIEW_HISTORYDATATOSCREEN",
     RECEIVE_LABORATORIES_DATA: "RECEIVE_LABORATORIES_DATA",
     RECEIVE_LINEGROUPS_DATA: "RECEIVE_LINEGROUPS_DATA",
@@ -73,6 +74,7 @@ const initialState = {
     customMarketCount: 0,
     marketPreviewData:null,
     marketHistoryArray:[],
+    marketLastSignArray:[],
     marketHistoryArrayToScreen:[]
 };
 
@@ -88,7 +90,7 @@ export const reducer = persistReducer(
                 return { ...state, customMaketCount: action.customMarketCount }
 
             case actionTypes.SET_CUSTOM_MARKET_SIGNATURE:
-                return { ...state, signedMessage: action.signedMessage }
+                return { ...state, isLoading: action.isLoading ,signedMessage: action.signedMessage }
 
             case actionTypes.RECEIVE_PRODUCTS_DATA:
                 return { ...state, products: action.products }
@@ -98,6 +100,9 @@ export const reducer = persistReducer(
                 
             case actionTypes.RECEIVE_PREVIEW_HISTORYDATA:
                 return { ...state, marketHistoryArray: action.historyData }
+
+            case actionTypes.RECEIVE_PREVIEW_LASTSIGN:
+                return { ...state, marketLastSignArray: action.lastSignData }
 
             case actionTypes.RECEIVE_PREVIEW_HISTORYDATATOSCREEN:
                 return { ...state, marketHistoryArrayToScreen: action.historyDataToScreen }     

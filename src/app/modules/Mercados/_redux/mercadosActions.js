@@ -36,11 +36,13 @@ export const signMarket = (data) => {
       const response = resp.data;
 
       if (response.status) {
-        dispatch({ type: actionTypes.SET_GET_SUCCESS, visible: true, title: 'Exito!', description: response.message });
+        dispatch({ type: actionTypes.SET_CUSTOM_MARKET_SIGNATURE, isLoading: false, signedMessage: null });
+
+        // dispatch({ type: actionTypes.SET_GET_SUCCESS, visible: true, title: 'Exito!', description: response.message });
 
         if (response.message == "Session Expirada") {
 
-          dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: response.message });
+          // dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: response.message });
           swal({
             title: "Error",
             text: response.message,
@@ -60,7 +62,7 @@ export const signMarket = (data) => {
         dispatch(getCustomMarketTree());
       }
       else {
-        dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: response.message });
+        dispatch({ type: actionTypes.SET_CUSTOM_MARKET_SIGNATURE, isLoading: false, signedMessage: null });
         swal({
           title: "Error",
           text: response.message,
@@ -70,7 +72,12 @@ export const signMarket = (data) => {
     }
     catch (error) {
       console.error("Error in SignMarket request:", error);
-      dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: error.message });
+      swal({
+        title: "Error",
+        text: 'Ocurrio un error inesperado',
+        icon: "warning",
+      })
+      // dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: error.message });
     }
   }
 }
@@ -98,12 +105,22 @@ export const signAll = (lineCode, userId, customMarketCount) => {
 
       }
       else {
-        dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: response.message });
+        swal({
+          title: "Error",
+          text: response.message,
+          icon: "warning",
+        })
+        // dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: response.message });
       }
     }
     catch (error) {
+      swal({
+        title: "Error",
+        text: "Ocurrio un error inesperado",
+        icon: "warning",
+      })
       console.error("Error in SignMarket request:", error);
-      dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: error.message });
+      // dispatch({ type: actionTypes.SET_GET_ERROR, visible: true, title: 'Error', description: error.message });
     }
   }
 }
@@ -712,7 +729,12 @@ export const getCustomMarketsPreview = (code) => {
 export const getHistoricCustomMarketsPreview = (code) => {
   return async function (dispatch) {
     const customMarketPreview = await axios.get(`customMarkets/historicpreviews/${code}`)
-    debugger;
+    return customMarketPreview.data
+  }
+}
+export const getLastSignCustomMarketsPreview = (code) => {
+  return async function (dispatch) {
+    const customMarketPreview = await axios.get(`customMarkets/actualpreview/${code}`)
     return customMarketPreview.data
   }
 }
