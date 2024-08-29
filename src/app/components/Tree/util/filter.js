@@ -3,41 +3,57 @@ export const defaultMatcher = (filterText, node) => {
         filterText = String(filterText);
     }
 
-    // Función recursiva para buscar coincidencias y devolver el nodo correspondiente
+    const filter = filterText.toLowerCase();
+
+    // Función recursiva para buscar coincidencias y devolver los nodos correspondientes
     const searchInNode = (node) => {
-        // Verifica si el nodo tiene el valor 'customerMarket' y 'customMarketDescription'
+        const matches = [];
+
+        // Si el nodo tiene la descripción del mercado, verificamos la coincidencia
         if (node.value && node.value.customerMarket && node.value.customerMarket.customMarketDescription) {
             const description = node.value.customerMarket.customMarketDescription.toLowerCase();
-            const filter = filterText.toLowerCase();
 
-            // Comprobar si las primeras 3 letras de 'filterText' coinciden con las primeras 3 letras de 'customMarketDescription'
-            if (filter.length >= 3 && description.startsWith(filter)) {
-                return node;
+            // Si el filtro está contenido en la descripción
+            if (description.includes(filter)) {
+                matches.push(node);
             }
         }
 
-        // Si el nodo tiene hijos, realizar búsqueda recursiva en ellos
+        // Buscar recursivamente en los hijos
         if (node.children && node.children.length > 0) {
             for (let child of node.children) {
-                const result = searchInNode(child);
-                if (result) {
-                    return result; // Retorna el nodo coincidente
-                }
+                const childMatches = searchInNode(child);
+                matches.push(...childMatches); // Agrega los resultados del hijo al array de coincidencias
             }
         }
 
-        // Si no se encuentra coincidencia, retorna null
-        return null;
+        return matches;
     };
 
-    // Si el texto de filtro está vacío, retorna el nodo original completo
-    if (filterText.trim() === '') {
+    // Si el filtro está vacío, retorna el nodo completo
+    if (filter.trim() === '') {
         return node;
     }
 
     // Comenzar la búsqueda desde el nodo raíz
-    return searchInNode(node) || node;
+    const matchedNodes = searchInNode(node);
+
+    // Ordenar los resultados: las coincidencias exactas primero
+    matchedNodes.sort((a, b) => {
+        const descriptionA = a.value.customerMarket.customMarketDescription.toLowerCase();
+        const descriptionB = b.value.customerMarket.customMarketDescription.toLowerCase();
+        return descriptionA.indexOf(filter) - descriptionB.indexOf(filter);
+    });
+
+    // Si hay resultados, devolver el nodo con los hijos coincidentes ordenados
+    if (matchedNodes.length > 0) {
+        return { ...node, children: matchedNodes };
+    }
+
+    // Si no se encuentra coincidencia exacta, devolver el nodo original (sin modificar)
+    return node;
 };
+
 
 // Encuentra nodos que coinciden o tienen hijos que coinciden
 export const findNode = (node, filter, matcher) => {
