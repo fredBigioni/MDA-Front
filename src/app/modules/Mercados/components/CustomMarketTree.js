@@ -199,17 +199,17 @@ const CustomMarketTree = (props) => {
         setData(Object.assign({}, data))
     }
 
-    const onFilterKeyUp = ({ target: { value } }) => {
-        let treeData = generateNodeTree(customMarketsData)
-        const filter = value.trim();
-        if (!filter || filter == '') {
-            return setData(treeData)
+    const onFilterKeyUp = (e) => {
+        let treeData = generateNodeTree(customMarketsData);
+        const filter = e.target.value.toLowerCase().trim();
+    
+        if (!filter) {
+            return setData(treeData);
         } else {
             let filtered = filters.filterTree(treeData, filter);
-            filtered = filters.expandFilteredNodes(filtered, filter);
-            setData(filtered)
+            setData(filtered);
         }
-    }
+    };
 
     const show = (id, e) => {
         contextMenu.show({

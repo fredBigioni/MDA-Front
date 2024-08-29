@@ -741,15 +741,12 @@ export const getLastSignCustomMarketsPreview = (code) => {
 export const getHistoricCustomMarketsPreviewToScreen = (code) => {
   return async function (dispatch) {
     const customMarketPreview = await axios.get(`customMarkets/historicpreviewstoscreen/${code}`)
-    debugger;
     return customMarketPreview
   }
 }
 export const getLastSignCustomMarketsPreviewToScreen = (code) => {
   return async function (dispatch) {
-    debugger;
     const customMarketPreview = await axios.get(`customMarkets/lastsignpreviewstoscreen/${code}`)
-    debugger;
     return customMarketPreview
   }
 }

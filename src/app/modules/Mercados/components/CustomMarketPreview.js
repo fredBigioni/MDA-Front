@@ -39,7 +39,6 @@ const CustomMarketPreview = (props) => {
       if(customMarketPageView.view == 'preview') {
           setLoading(true)
           let preview = await props.getCustomMarketsPreview(customMarket.data.code)
-          debugger;
           preview = preview.map( item => {
             item.modifier = item.modifier.toString().replace('.', ',')
             item.intemodifier = item.intemodifier.toString().replace('.', ',')

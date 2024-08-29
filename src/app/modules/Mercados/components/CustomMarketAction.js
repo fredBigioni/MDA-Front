@@ -26,7 +26,7 @@ import { Grid } from 'react-virtualized';
 import { CircularProgress, Dialog, Drawer, Popover } from '@material-ui/core';
 
 function CustomMarketAction(props) {
-  const { customMarketPageView, customMarket, lineSelected, marketHistoryArray, marketHistoryArrayToScreen,marketLastSignArray, intl } = props;
+  const { customMarketPageView, customMarket, lineSelected, marketHistoryArray, marketHistoryArrayToScreen,marketLastSignArray, isLoading, intl } = props;
   const [isActionClone, setIsActionClone] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openCustomMarketDialog, setOpenCustomMarketDialog] = React.useState(false);
@@ -47,7 +47,7 @@ function CustomMarketAction(props) {
   useEffect(() => {
     getHistoricCustomMarketsPreview()
     getLastSignCustomMarketsPreview()
-  }, [customMarket, lineSelected, customMarketPageView, openCustomMarketDialog, anchorElDropdown])
+  }, [customMarket, lineSelected, customMarketPageView, openCustomMarketDialog, anchorElDropdown, isLoading])
 
 
   const getHistoricCustomMarketsPreview = async () => {
@@ -60,7 +60,6 @@ function CustomMarketAction(props) {
   const getLastSignCustomMarketsPreview = async () => {
     if (customMarketPageView.view == 'preview') {
       let preview = await props.getLastSignCustomMarketsPreview(customMarket.data.code)
-      debugger;
       dispatch({ type: actionTypes.RECEIVE_PREVIEW_LASTSIGN, lastSignData: preview?.length > 0 ? preview : [] })
     }
   }
@@ -68,7 +67,6 @@ function CustomMarketAction(props) {
   const getHistoricCustomMarketsPreviewToScreen = async (item) => {
     if (customMarketPageView.view == 'preview') {
       let preview = await props.getHistoricCustomMarketsPreviewToScreen(item.code)
-      debugger;
       dispatch({ type: actionTypes.RECEIVE_PREVIEW_HISTORYDATATOSCREEN, historyDataToScreen: preview?.data })
     }
   }
@@ -76,7 +74,6 @@ function CustomMarketAction(props) {
   const getLastSignCustomMarketsPreviewToScreen = async (item) => {
     if (customMarketPageView.view == 'preview') {
       let preview = await props.getLastSignCustomMarketsPreviewToScreen(item.code)
-      debugger;
       dispatch({ type: actionTypes.RECEIVE_PREVIEW_HISTORYDATATOSCREEN, historyDataToScreen: preview?.data })
     }
   }
@@ -107,6 +104,10 @@ function CustomMarketAction(props) {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'America/Argentina/Buenos_Aires'
     });
     setVersionDateTitle(formattedDate);
     setVersionCodeTitle(item?.code)
@@ -117,6 +118,17 @@ function CustomMarketAction(props) {
 
   const handleOpenMaterialModalLast = async (screen) => {
     setTableTitle(screen)
+
+    const formattedDate = new Date(marketLastSignArray[0]?.versionDate).toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'America/Argentina/Buenos_Aires'
+    });
+    setVersionDateTitle(formattedDate);
     const lastItem = customMarket?.data
     await getLastSignCustomMarketsPreviewToScreen(lastItem)
     setDataForTable(marketHistoryArrayToScreen ? marketHistoryArrayToScreen : [])
@@ -326,7 +338,7 @@ function CustomMarketAction(props) {
         open={openMaterialModal}
         onClose={handleCloseMaterialModal}>
         <MaterialTable
-          title={tableTitle === 'historicSign' ? `Tabla historica: Version ${versionCodeTitle} - Fecha: ${versionDateTitle}` : 'Ultima Firmada'}
+          title={tableTitle === 'historicSign' ? `Tabla historica: Version ${versionCodeTitle} - Fecha: ${versionDateTitle}` : `Ultima Firmada: ${versionDateTitle}`}
           columns={[
             { title: intl.formatMessage({ id: "CUSTOM_MARKET_PREVIEW.CODE.SHORT" }), field: 'id' },
             { title: intl.formatMessage({ id: "CUSTOM_MARKET_PREVIEW.LABORATORY.SHORT" }), field: 'labDescription' },
@@ -422,7 +434,8 @@ const mapStateToProps = (state) => {
     customMarketPageView: state.mercados.customMarketPageView,
     marketHistoryArray: state.mercados.marketHistoryArray,
     marketHistoryArrayToScreen: state.mercados.marketHistoryArrayToScreen,
-    marketLastSignArray:state.mercados.marketLastSignArray
+    marketLastSignArray:state.mercados.marketLastSignArray,
+    isLoading: state.mercados.isLoading
 
 
   };
