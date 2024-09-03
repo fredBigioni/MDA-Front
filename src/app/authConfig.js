@@ -14,8 +14,8 @@ export const msalConfig = {
     auth: {
         clientId:  `0d3c348d-341c-4f10-9bf1-f7aa177002fe`, // This is the ONLY mandatory field that you need to supply.
         authority: `https://login.microsoftonline.com/1748daec-496f-499f-92d1-e1ff0d8f5631`, // Defaults to "https://login.microsoftonline.com/common"
-        redirectUri: "http://localhost:3000"/*"https://desamda.portalcorp.com.ar"*/, // You must register this URI on Azure Portal/App Registration. Defaults to window.location.origin
-        postLogoutRedirectUri:"http://localhost:3000" /*"https://desamda.portalcorp.com.ar"*/, // Indicates the page to navigate after logout.
+        redirectUri:"http://localhost:3000/" /*"https://home.solutica.com.ar:883/MDA_Roemmers"*//*"https://desamda.portalcorp.com.ar"*/, // You must register this URI on Azure Portal/App Registration. Defaults to window.location.origin
+        postLogoutRedirectUri:"http://localhost:3000/"/*"https://home.solutica.com.ar:883/MDA_Roemmers"*/ /*"https://desamda.portalcorp.com.ar"*/, // Indicates the page to navigate after logout.
         navigateToLoginRequestUrl: false, // If "true", will navigate back to the original request location before processing the auth code response.
     },
     cache: {

@@ -104,3 +104,7 @@
 .cursor-default {
   cursor: default !important;
 }
+
+.MuiIconButton-root:hover {
+  background-color: rgba(0, 0, 0, 0) !important;
+}

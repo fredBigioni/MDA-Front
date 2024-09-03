@@ -46,9 +46,11 @@ export function Routes() {
         handleAzureADLogin(res.uniqueId, res.accessToken);
       } catch (error) {
         console.error("Token acquisition failed", error);
-        // Handle token acquisition failure
+        // Si falla la adquisición del token, hacer logout y redirigir al login
+        instance.logoutRedirect({ postLogoutRedirectUri: "/" });
       }
     }
+
 
     if (isAuthenticated && inProgress === 'none') {
       getTokenSilently();

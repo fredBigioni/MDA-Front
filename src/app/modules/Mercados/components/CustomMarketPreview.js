@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect, shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import * as actions from './../_redux/mercadosActions';
@@ -13,12 +13,14 @@ import { useStyles } from '../../../Style/GeneralStyles';
 import { actionTypes } from '../_redux/mercadosRedux';
 
 
+
 const CustomMarketPreview = (props) => {
   const clases = useStyles()
   const dispatch = useDispatch();
   const {customMarket, customMarketPageView, intl, marketPreviewData  } = props;  
   const [ isLoading, setLoading ] = React.useState(true)
 //   const [ marketPreviewData, setMarketPreviewData ] = React.useState([])
+  const [key, setKey] = useState(0);
   const [ allowedPermission, setAllowedPermission ] = React.useState(false)
   const [ itemsToDelete, setItemsToDelete ] = React.useState([])
   const [ itemsToEdit, setItemsToEdit ] = React.useState([])
@@ -180,7 +182,8 @@ const updateCustomMarket = async(customMarketSelectedItem) => {
                 <IconButton 
                     aria-label=""  
                     color="primary" 
-                    className="p-3">
+                    className="p-3"                    
+                   >
                     <span style={{color:'#17c191', fontSize: '14px'}}>
                         <FormattedMessage id="FORM.ACTION.SAVE" />
                     </span>
@@ -212,6 +215,16 @@ const updateCustomMarket = async(customMarketSelectedItem) => {
         }
         return null
     }
+
+    const handleButtonClick = (action) => {
+        // Realiza la acción correspondiente
+        if (action === 'cancel') {
+            setKey(prevKey => prevKey + 1);
+        } else if (action === 'save') {
+            setKey(prevKey => prevKey + 1);
+    };
+        }
+
   
   return ( 
     <>  
@@ -225,6 +238,7 @@ const updateCustomMarket = async(customMarketSelectedItem) => {
                 (!customMarket.isLoading && Object.keys(customMarket.data).length > 0) &&
                     <>
                         <MaterialTable
+                            key={key}
                             title=''
                             isLoading={isLoading}
                             columns={[
@@ -298,11 +312,17 @@ const updateCustomMarket = async(customMarketSelectedItem) => {
                                     icon: () => <ButtonCancel />,
                                     tooltip: intl.formatMessage({id: "FORM.ACTION.CANCEL"}),
                                     isFreeAction: true,
+                                    onClick: () => handleButtonClick('cancel'),
+                                    hidden: !visibleButtonsToolbar
+                                    
                                 },
                                 {
                                     icon: () => <ButtonSave />,
                                     tooltip: intl.formatMessage({id: "FORM.ACTION.SAVE"}),
                                     isFreeAction: true,
+                                    onClick: () => handleButtonClick('save'),
+                                    hidden: !visibleButtonsToolbar
+                                    
                                 }
                             ]}
                             localization={{
