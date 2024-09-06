@@ -48,7 +48,7 @@ export const signMarket = (data) => {
             text: response.message,
             icon: "warning",
           }).then((e) => {
-            if(e){
+            if (e) {
               document.location.href = '/logout'
             }
           })
@@ -105,6 +105,7 @@ export const signAll = (lineCode, userId, customMarketCount) => {
 
       }
       else {
+        await dispatch({ type: actionTypes.SET_CUSTOM_MARKET_SIGN_ALL, isLoading: false, signedMessage: null });
         swal({
           title: "Error",
           text: response.message,
@@ -454,7 +455,7 @@ export const updateCustomMarket = (customMarket) => {
       });
 
       getCustomMarket.data.fullDescription = getCustomMarketDescription(getCustomMarket.data)
-
+      dispatch(getCustomMarketTree());
       return dispatch({ type: actionTypes.STORE_CUSTOM_MARKET_SELECTED, isLoading: false, customMarketSelected: getCustomMarket.data })
     }
   }

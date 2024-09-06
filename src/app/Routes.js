@@ -47,7 +47,8 @@ export function Routes() {
       } catch (error) {
         console.error("Token acquisition failed", error);
         // Si falla la adquisición del token, hacer logout y redirigir al login
-        instance.logoutRedirect({ postLogoutRedirectUri: "/" });
+        // instance.logoutRedirect({ postLogoutRedirectUri: "/logout" });
+        document.location.href = "/logout"
       }
     }
 

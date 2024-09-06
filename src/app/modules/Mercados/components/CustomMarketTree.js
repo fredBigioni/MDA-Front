@@ -161,7 +161,7 @@ const CustomMarketTree = (props) => {
                                 },
                                 name: (<>
                                     {childMarket.customMarketDescription.toUpperCase()}
-                                    <TrafficLightIcon signed={childMarket.signed} /></>),
+                                    <TrafficLightIcon signed={childMarket.signed} signedUser={childMarket.signedUser} /></>),
                                 signed: childMarket.signed,
                             })
                         }

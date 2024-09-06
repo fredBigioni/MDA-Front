@@ -2,8 +2,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const TrafficLightIcon = ({ signed }) => {
-    const color = signed ? 'green' : 'yellow';
+const TrafficLightIcon = ({ signed, signedUser }) => {
+    const color = (signed && signedUser == 23) ? 'blue' : signed ? 'green':'yellow';
     
     return (
         <div style={{
