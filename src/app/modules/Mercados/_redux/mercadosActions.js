@@ -449,6 +449,15 @@ export const updateCustomMarket = (customMarket) => {
   return async function (dispatch) {
     //dispatch({type: actionTypes.STORE_CUSTOM_MARKET_SELECTED, isLoading: true })
     const getCustomMarket = await axios.put(`customMarkets/${customMarket.code}`, customMarket)
+
+    if (getCustomMarket && getCustomMarket.data.status == false) {
+      swal({
+        title: "Error",
+        text: getCustomMarket.data.message,
+        icon: "warning",
+      })
+      return;
+    }
     if (getCustomMarket && getCustomMarket.data) {
       getCustomMarket.data.customMarketDetail.forEach(function (cmd, index) {
         cmd.index = index;
@@ -456,7 +465,7 @@ export const updateCustomMarket = (customMarket) => {
 
       getCustomMarket.data.fullDescription = getCustomMarketDescription(getCustomMarket.data)
       dispatch(getCustomMarketTree());
-      return dispatch({ type: actionTypes.STORE_CUSTOM_MARKET_SELECTED, isLoading: false, customMarketSelected: getCustomMarket.data })
+      return dispatch({ type: actionTypes.STORE_CUSTOM_MARKET_SELECTED, isLoading: false, customMarketSelected: getCustomMarket.data });
     }
   }
 }
